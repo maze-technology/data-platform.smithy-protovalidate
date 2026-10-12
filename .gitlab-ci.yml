@@ -1,15 +1,19 @@
 # GitLab SoT CI for smithy-protovalidate (Python).
-# release_approval gates MRs into main (GitHub release-approval.yaml parity on CE).
+# release_approval gates MRs into main (CE substitute for protected environments).
 
 stages: [test]
 
 include:
   - project: "data-platform/infrastructure-base"
-    ref: "v0.1.48"
+    ref: "v0.2.26"
+    file: "/ci/templates/workflow-auto-cancel.gitlab-ci.yml"
+  - project: "data-platform/infrastructure-base"
+    ref: "v0.2.26"
     file: "/ci/templates/release-approval.gitlab-ci.yml"
 
 python_test:
   stage: test
+  interruptible: true
   image: python:3.12-alpine
   script:
     - pip install -r requirements.txt
